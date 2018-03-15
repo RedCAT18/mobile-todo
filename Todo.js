@@ -29,8 +29,8 @@ export default class Todo extends Component {
                     { isEditing ? (
                         <TextInput 
                             style={[
-                                styles.input, 
                                 styles.text,
+                                styles.input, 
                                 isCompleted ? styles.completedText : null    
                             ]} 
                             value={todoValue}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     text: {
         fontWeight: '400',
         fontSize: 16,
-        marginVertical: 20,
+        marginVertical: 10,
         color: '#286e8b'
     },
     completedCircle:{
@@ -152,7 +152,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
-        marginVertical: 15,
+        marginVertical: 10,
+        paddingBottom: 5,
         width: width /2,
     }
 });

@@ -9,6 +9,7 @@ import {
   ScrollView, 
   Platform 
 } from 'react-native';
+import { AppLoading } from 'expo';
 
 import Todo from './Todo';
 
@@ -17,6 +18,7 @@ const { height, width } = Dimensions.get("window");
 export default class App extends React.Component {
   state = {
     newTodo: '',
+    loadedTodos: false,
   };
 
   _controlNewTodo = text => {
@@ -25,8 +27,21 @@ export default class App extends React.Component {
     })
   };
 
+  componentDidMount = () => {
+    this._loadTodos();
+  };
+  
+  _loadTodos = () => {
+    
+  };
+
   render() {
-    const { newTodo } = this.state;
+    const { newTodo, loadedTodos } = this.state;
+    
+    if(!loadedTodos) {
+      return <AppLoading />;
+    }
+
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor='transparent'/>
