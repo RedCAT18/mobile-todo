@@ -66,13 +66,19 @@ export default class Todo extends Component {
                         </TouchableOpacity>
                     </View>
                 ) : ( 
-                    <View style= {styles.actions}>
-                        <TouchableOpacity onPressOut={this._startEditing}>
-                            <View style = {styles.actionContainer}>
-                                <Text style = {styles.actionText}>✏️</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPressOut={() => deleteTodo(id)} >
+                    <View style= {styles.actions}> 
+                        { !isCompleted && 
+                            <TouchableOpacity onPressOut={this._startEditing}>
+                                <View style = {styles.actionContainer}>
+                                    <Text style = {styles.actionText}>✏️</Text>
+                                </View>
+                            </TouchableOpacity>
+                        }
+                        <TouchableOpacity 
+                            onPressOut={ event => {
+                                event.stopPropagation();
+                                deleteTodo(id);
+                        }} >
                             <View style = {styles.actionContainer}>
                                 <Text style = {styles.actionText}>❌</Text>
                             </View>
@@ -83,12 +89,13 @@ export default class Todo extends Component {
         );
     }
 
-    _toggleCompleted = () => {
+    _toggleCompleted = (event) => {
         // this.setState(prevState => {
         //     return {
         //         isCompleted: !prevState.isCompleted
         //     };
         // })
+        event.stopPropagation();
         const { isCompleted, incompleteTodo, completeTodo, id } = this.props;
         if(isCompleted) {
             incompleteTodo(id);
@@ -96,7 +103,8 @@ export default class Todo extends Component {
             completeTodo(id);
         }
     }
-    _startEditing = () => {
+    _startEditing = (event) => {
+        event.stopPropagation();
         const { text } = this.props;
         this.setState({
             isEditing: true,
@@ -104,7 +112,8 @@ export default class Todo extends Component {
     
         });
     }
-    _finishEditing = () => {
+    _finishEditing = (event) => {
+        event.stopPropagation();
         const { todoValue } = this.state;
         const { id, updateTodo } = this.props;
         updateTodo(id, todoValue);
@@ -161,7 +170,6 @@ const styles = StyleSheet.create({
     },
     actions: {
         flexDirection: 'row',
-
     },
     actionContainer: {
         marginVertical: 10,
@@ -171,7 +179,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
-        marginLeft: 4,
+        paddingLeft: 3,
+        backgroundColor: '#eee',
         width: width /2,
     }
 });

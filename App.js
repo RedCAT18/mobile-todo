@@ -7,7 +7,8 @@ import {
   StatusBar, 
   Dimensions, 
   ScrollView, 
-  Platform 
+  Platform,
+  AsyncStorage
 } from 'react-native';
 import uuidv1 from 'uuid/v1';
 import { AppLoading } from 'expo';
@@ -57,16 +58,24 @@ export default class App extends React.Component {
             ...newTodoObject
           }
         };
+        this._saveTodos(newState.todos);
         return { ...newState };
       });
     }
   };
 
-  _loadTodos = () => {
-    this.setState({
-      loadedTodos: true,
-      
-    });    
+  _loadTodos = async () => {
+    try {
+      const todos = await AsyncStorage.getItem('todos');
+      const parsedTodos = JSON.parse(todos);
+      console.log(todos);
+      this.setState({
+        loadedTodos: true,
+        todos: parsedTodos,
+      });    
+    } catch(err) {
+      console.log(err);
+    }
   };
 
   _deleteTodo = (id) => {
@@ -77,6 +86,7 @@ export default class App extends React.Component {
         ...prevState,
         ...todos
       };
+      this._saveTodos(newState.todos);
       return { ...newState };
     });
   };
@@ -93,6 +103,7 @@ export default class App extends React.Component {
           }
         }
       }
+      this._saveTodos(newState.todos);
       return { ...newState };
     });
   };
@@ -109,6 +120,7 @@ export default class App extends React.Component {
           }
         }
       }
+      this._saveTodos(newState.todos);
       return { ...newState };
     });
   };
@@ -125,13 +137,18 @@ export default class App extends React.Component {
           }
         }
       }
+      this._saveTodos(newState.todos);
       return { ...newState };
     });
   };
 
+  _saveTodos = (newTodos) => {
+    const saveTodos = AsyncStorage.setItem('todos', JSON.stringify(newTodos));
+  }
+
   render() {
     const { newTodo, loadedTodos, todos } = this.state;
-    console.log(todos);
+    // console.log(todos);
 
     if(!loadedTodos) {
       return <AppLoading />;
@@ -152,7 +169,7 @@ export default class App extends React.Component {
             onSubmitEditing={this._addTodo}
           />
           <ScrollView contentContainerStyle= {styles.todos}>
-            {Object.values(todos).map(todo => 
+            {Object.values(todos).reverse().map(todo => 
               <Todo 
                 key={todo.id} 
                 {...todo} 
