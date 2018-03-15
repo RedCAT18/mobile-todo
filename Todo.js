@@ -7,18 +7,29 @@ import {
     Dimensions,
     TextInput
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 const { height, width } = Dimensions.get("window");
 
 export default class Todo extends Component {
-    state = {
-        isEditing: false,
-        isCompleted: false,
-        todoValue: ''
+    constructor(props) {
+        super(props);
+        this.state = { 
+            isEditing: false, 
+            todoValue: props.text, 
+        };
+    };
+    static propTypes = {
+        text: PropTypes.string.isRequired,
+        isCompleted: PropTypes.bool.isRequired,
+        deleteTodo: PropTypes.func.isRequired,
+        id: PropTypes.string.isRequired,
+        incompleteTodo: PropTypes.func.isRequired,
+        completeTodo: PropTypes.func.isRequired,
     };
     render() {
-        const { isCompleted, isEditing, todoValue } = this.state;
-        const { text } = this.props;
+        const { isEditing, todoValue } = this.state;
+        const { text, id, deleteTodo, isCompleted } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.column}>
@@ -60,7 +71,7 @@ export default class Todo extends Component {
                                 <Text style = {styles.actionText}>✏️</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPressOut={() => deleteTodo(id)} >
                             <View style = {styles.actionContainer}>
                                 <Text style = {styles.actionText}>❌</Text>
                             </View>
@@ -72,11 +83,17 @@ export default class Todo extends Component {
     }
 
     _toggleCompleted = () => {
-        this.setState(prevState => {
-            return {
-                isCompleted: !prevState.isCompleted
-            };
-        })
+        // this.setState(prevState => {
+        //     return {
+        //         isCompleted: !prevState.isCompleted
+        //     };
+        // })
+        const { isCompleted, incompleteTodo, completeTodo, id } = this.props;
+        if(isCompleted) {
+            incompleteTodo(id);
+        } else {
+            completeTodo(id);
+        }
     }
     _startEditing = () => {
         const { text } = this.props;
@@ -121,8 +138,7 @@ const styles = StyleSheet.create({
     text: {
         fontWeight: '400',
         fontSize: 16,
-        marginVertical: 10,
-        color: '#286e8b'
+        color: '#286e8b',
     },
     completedCircle:{
         borderColor: "#bbb",
@@ -138,7 +154,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: width / 2,
-        justifyContent: 'space-between',
     },
     actions: {
         flexDirection: 'row',
@@ -152,8 +167,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
-        marginVertical: 10,
-        paddingBottom: 5,
         width: width /2,
     }
 });
