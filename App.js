@@ -113,7 +113,21 @@ export default class App extends React.Component {
     });
   };
 
-
+  _updateTodo = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            text: text,
+          }
+        }
+      }
+      return { ...newState };
+    });
+  };
 
   render() {
     const { newTodo, loadedTodos, todos } = this.state;
@@ -145,6 +159,7 @@ export default class App extends React.Component {
                 deleteTodo={this._deleteTodo} 
                 incompleteTodo = {this._incompleteTodo}
                 completeTodo = {this._completeTodo}
+                updateTodo = {this._updateTodo}
               />
             )}
           </ScrollView>

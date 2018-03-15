@@ -26,6 +26,7 @@ export default class Todo extends Component {
         id: PropTypes.string.isRequired,
         incompleteTodo: PropTypes.func.isRequired,
         completeTodo: PropTypes.func.isRequired,
+        updateTodo: PropTypes.func.isRequired,
     };
     render() {
         const { isEditing, todoValue } = this.state;
@@ -104,6 +105,9 @@ export default class Todo extends Component {
         });
     }
     _finishEditing = () => {
+        const { todoValue } = this.state;
+        const { id, updateTodo } = this.props;
+        updateTodo(id, todoValue);
         this.setState({
             isEditing: false
         });
@@ -167,6 +171,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
+        marginLeft: 4,
         width: width /2,
     }
 });
