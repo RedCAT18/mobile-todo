@@ -35,13 +35,13 @@ export default class App extends React.Component {
           <TextInput style={styles.input} 
             underlineColorAndroid='transparent' 
             placeholder={'Enter new schedule.'} 
-            placeholderTextColor={'#57c194'}
+            placeholderTextColor={'#286e8b'}
             returnKeyType={'done'}
             autoCorrect={false}
             value={newTodo} onChangeText={this._controlNewTodo} 
           />
-          <ScrollView>
-            <Todo/>
+          <ScrollView contentContainerStyle= {styles.todos}>
+            <Todo text={"Hello, I'm a To-do props."}/>
           </ScrollView>
         </View>
       </View>
@@ -91,4 +91,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     fontSize: 18,
   },
+  todos: {
+    alignItems: 'center'
+  }
 });
