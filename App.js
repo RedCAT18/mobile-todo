@@ -17,6 +17,7 @@ import { Font } from 'expo';
 import Todo from './Todo';
 
 const { height, width } = Dimensions.get("window");
+const title = 'What you will do';
 
 export default class App extends React.Component {
   state = {
@@ -81,7 +82,6 @@ export default class App extends React.Component {
       const parsedTodos = JSON.parse(todos);
       //파싱된 todo가 없을 시 (ex. 첫 실행) 빈 오브젝트를 세팅
       this.setState({ loadedTodos: true, todos: parsedTodos || {} });
-      console.log(todos);
       this.setState({
         loadedTodos: true,
         todos: parsedTodos,
@@ -161,7 +161,6 @@ export default class App extends React.Component {
 
   render() {
     const { newTodo, loadedTodos, todos, fontLoaded } = this.state;
-    // console.log(todos);
 
     if(!loadedTodos) {
       return <AppLoading />;
@@ -172,7 +171,7 @@ export default class App extends React.Component {
         <StatusBar barStyle="light-content" backgroundColor='transparent'/>
         <Text style={[styles.title,
           fontLoaded ? styles.titleFont : null
-        ]}> To Do </Text>
+        ]}> {title} </Text>
         <View style={styles.card}>
           <TextInput style={styles.input} 
             underlineColorAndroid='transparent' 
@@ -213,6 +212,8 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: 50,
     marginBottom: 30,
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 2,
   },
   titleFont: {
     fontFamily: 'Happy-Camper-Regular',
