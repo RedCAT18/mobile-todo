@@ -8,10 +8,11 @@ import {
   Dimensions, 
   ScrollView, 
   Platform,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import uuidv1 from 'uuid/v1';
 import { AppLoading } from 'expo';
+import { Font } from 'expo';
 
 import Todo from './Todo';
 
@@ -21,18 +22,28 @@ export default class App extends React.Component {
   state = {
     newTodo: '',
     loadedTodos: false,
-    todos: {}
+    todos: {},
+    fontLoaded: false,
   };
 
-  componentDidMount = () => {
-    this._loadTodos();
-  };
+  async componentDidMount() {
+    try {
+      this._loadTodos();
+      await Font.loadAsync({
+        'Happy-Camper-Regular': require('./assets/fonts/Happy-Camper-Regular.ttf'),
+      });
+      this.setState({fontLoaded: true});
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   _controlNewTodo = text => {
     this.setState({
       newTodo: text,
-    })
+    });
   };
+
 
   _addTodo = () => {
     const { newTodo } = this.state;
@@ -147,7 +158,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { newTodo, loadedTodos, todos } = this.state;
+    const { newTodo, loadedTodos, todos, fontLoaded } = this.state;
     // console.log(todos);
 
     if(!loadedTodos) {
@@ -157,7 +168,9 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor='transparent'/>
-        <Text style={styles.title}> To Do </Text>
+        <Text style={[styles.title,
+          fontLoaded ? styles.titleFont : null
+        ]}> To Do </Text>
         <View style={styles.card}>
           <TextInput style={styles.input} 
             underlineColorAndroid='transparent' 
@@ -193,11 +206,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 42,
+    fontSize: 48,
     fontWeight: '100',
     color: 'white',
     marginTop: 50,
     marginBottom: 30,
+  },
+  titleFont: {
+    fontFamily: 'Happy-Camper-Regular',
   },
   card: {
     backgroundColor: 'white',
