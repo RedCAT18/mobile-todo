@@ -79,6 +79,8 @@ export default class App extends React.Component {
     try {
       const todos = await AsyncStorage.getItem('todos');
       const parsedTodos = JSON.parse(todos);
+      //파싱된 todo가 없을 시 (ex. 첫 실행) 빈 오브젝트를 세팅
+      this.setState({ loadedTodos: true, todos: parsedTodos || {} });
       console.log(todos);
       this.setState({
         loadedTodos: true,
